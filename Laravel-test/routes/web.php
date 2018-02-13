@@ -15,10 +15,14 @@ Route::get('/index', "HomeController@index" )->name('index');
 Route::get('/create', "PostsController@Create")->name('create');
 Route::post('/store', "PostsController@Store")->name('store');
 Route::get('/all', "HomeController@admin")->name('all');
-Route::post('/comment-created/{post_id}', "CommentsController@Create")->name('comment-created');
-Route::get('/delete/{id}', 'PostsController@postsDelete')->name('delete');
+Route::post('/comment-created/{id}', "CommentsController@Create")->name('comment-created');
+Route::get('/delete/{id}', 'PostsController@Delete')->name('delete');
 Route::post('/update/{id}', 'PostsController@Update')->name('update');
 Route::get('/edit/{id}', "PostsController@Edit")->name('edit');
 Route::get('/single/{id}', "PostsController@Single")->name('single');
+Route::get('/comment-delete/{id}', "CommentsController@Delete")->name('comment-delete');
 
+
+
+Auth::routes();
 

@@ -15,13 +15,15 @@ class PostsController extends Controller
     public function Create(){
         return view('posts.create');
     }
+
     public function Edit($id){
-        $edit = Post::where('id', $id)->get();
+        $edit = Post::findOrFail($id)->get();
         return view('posts.edit',['edit' => $edit]);
     }
+
     public function Update(EditPostRequest $request, $id){
 
-        $edit = Post::find($id);
+        $edit = Post::findOrFail($id);
         $edit->title = $request->get('title');;
         $edit->content = $request->get('content');
         $edit->date = $request->get('date');
@@ -32,18 +34,22 @@ class PostsController extends Controller
 
     public function Store(StorePostRequest $request){
 
-        $storing = new Post;
+        Post::create($request->except('_token') + [
+            'date' => Carbon::now()
+            ]);
+    /*    $storing = new Post;
         $storing->title = $request->get('title');
         $storing->content = $request->get('content');
         $storing->date = Carbon::now();
-        $storing->save();
+        $storing->save();*/
 
-        return redirect()->route('create');
+        return redirect()->route('all');
     }
 
     public function Admin(){
         return view('posts.all');
     }
+
     public function Single($id){
 //        // Pridedu API pradzia
 //        $chuck = file_get_contents('https://api.chucknorris.io/jokes/random');
@@ -55,13 +61,16 @@ class PostsController extends Controller
 //        $noris->content = $mas['value'];
 //        $noris->date = Carbon::createFromFormat('Y-m-d','2018-02-06');
 //        $norisApi = [$noris];
-        $single = Post::where('id',$id)->get();
+        $single = Post::where('id', $id)->get();
         $viewComments = Comments::where('post_id',$id)->get();
+        $commentPagination = Comments::paginate(3);
 
-        return view('posts.single',['single' => $single, 'comments' => $viewComments]);
+        return view('posts.single',['single' => $single, 'comments' => $viewComments, 'pagi' => $commentPagination]);
     }
+
     public function Delete($id){
         Post::destroy($id);
+
         return redirect()->route('all');
     }
 

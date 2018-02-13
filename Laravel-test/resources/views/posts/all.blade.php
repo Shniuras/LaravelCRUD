@@ -1,5 +1,7 @@
 @include('header', ['title' => 'BLOG'])
 @include('navbar')
+
+
 @foreach($postai as $d)
 <main role="main" class="inner cover">
     <div class="blog-post">
@@ -13,4 +15,9 @@
     </div>
 </main>
 @endforeach
+<div>
+    @for($i=1; $i<$postai->count(); $i++)
+            <a role="button" class="btn btn-outline-light " href="{{Route('all','page=' . $i)}}">{{$i}}</a>
+    @endfor
+</div>
 @include('footer')
