@@ -1,11 +1,10 @@
 @include('header', ['title' => 'SINGLE'])
 <main role="main" class="inner cover">
-    @foreach ($single as $s)
     <div class="blog-post">
-        <h2 class="blog-post-title">{{$s->title}}</h2>
-        <p class="blog-post-meta">{{$s->date}}</p>
+        <h2 class="blog-post-title">{{$single->title}}</h2>
+        <p class="blog-post-meta">{{$single->date}}</p>
         <p><span>
-                {{$s->content}}
+                {{$single->content}}
         </span> </p>
         @auth
         <a role="button" class="btn btn-link" href={{Route('all')}}>Back</a>
@@ -13,7 +12,6 @@
         <a role="button" class="btn btn-link" href={{Route('index')}}>Back</a>
         @endauth
     </div>
-    @endforeach
         <hr class="line">
         <p>Comments:</p>
     @foreach ($comments as $c)
@@ -29,9 +27,9 @@
         @endauth
     </p>
         @endforeach
-        @foreach ($single as $s)
-    <form method="post" action="{{route('comment-created',$s->id)}}">
-        @endforeach
+
+    <form method="post" action="{{route('comment-created',$single->id)}}">
+
         <input type="hidden" name="_token" value="{{csrf_token()}}">
         <div class="form-group">
             <label for="Name">Name</label>

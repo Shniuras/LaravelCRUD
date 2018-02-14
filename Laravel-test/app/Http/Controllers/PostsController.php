@@ -8,6 +8,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use PhpParser\Comment;
 use stdClass;
 
 class PostsController extends Controller
@@ -17,7 +18,7 @@ class PostsController extends Controller
     }
 
     public function Edit($id){
-        $edit = Post::findOrFail($id)->get();
+        $edit = Post::where('id', $id)->get();
         return view('posts.edit',['edit' => $edit]);
     }
 
@@ -61,16 +62,19 @@ class PostsController extends Controller
 //        $noris->content = $mas['value'];
 //        $noris->date = Carbon::createFromFormat('Y-m-d','2018-02-06');
 //        $norisApi = [$noris];
-        $single = Post::where('id', $id)->get();
-        $viewComments = Comments::where('post_id',$id)->get();
+
+        $single = Post::findOrFail($id);
+        $viewComments = $single->comments;
         $commentPagination = Comments::paginate(3);
 
         return view('posts.single',['single' => $single, 'comments' => $viewComments, 'pagi' => $commentPagination]);
     }
 
     public function Delete($id){
-        Post::destroy($id);
+        $post = Post::findOrFail($id);
+        $post->comments()->where('post_id', $id)->delete();
 
+        Post::destroy($id);
         return redirect()->route('all');
     }
 
